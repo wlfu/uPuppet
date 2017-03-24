@@ -30,8 +30,8 @@ Then:
 - This is linked to `Bin/uPuppet` for convenience
 - Intermediate files go in `Tmp` (you can delete these)
 
-| Source File | |
-| ---- | ----------- |
+| Source File |   |
+| ----------- | - |
 | uPuppet.hs | The main program |
 | Options.hs | Command line option handling |
 | CState.hs | Common state structure (for options etc) |
@@ -70,8 +70,8 @@ This allows the compilations to be checked without a running VM, even if the cac
 
 The following annotations can appear in any comment line (starting with #) in the Puppet source:
 
-| Annotation | |
-| ---------- | |
+| Annotation |   |
+| ---------- | - |
 | `@EXPECT_FAIL` | Expect both uPuppet & Puppet to fail |
 | `@UNSUPPORTED` | Expect uPuppet to fail & Puppet to compile |
 | `@UNORDERED` | Igonore order differences when comparing (top-level) catalog entries |
@@ -118,8 +118,8 @@ The original version of the file is renamed to `<SOME-FILE>.tex~`
 
 The -l option to run-tests.pl can be used to generate latex files with the (formatted) source and corresponding output (from Puppet, not uPuppet) for the tests. The latex output files are generated in the Cache/Latex directory, but they are re-generated every time run-tests.pl is run with the -l option (because the formatting options may have changed). The option `-t <FORMAT-STRING>` controls the format of the latex output (default `2fme`). This may contain the following characters:
 
-| Format | |
-| ------ | |
+| Format |   |
+| ------ | - |
 | 1 | single column style |
 | 2 | double column style |
 | f | enclose in figure |
