@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.box_version = ">= 20160621.0.0"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "uPuppet-Ubuntu"
+    # vb.gui = true
+    vb.memory = "2048"
+    vb.cpus   = 1
+  end
+
+  config.vm.provision "shell", privileged: false, path: "setup.sh"
+end

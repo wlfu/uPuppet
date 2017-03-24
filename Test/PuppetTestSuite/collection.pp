@@ -1,0 +1,16 @@
+#@UNSUPPORTED
+
+class one {
+    @file { "/tmp/colltest1": content => "one" }
+    @file { "/tmp/colltest2": content => "two" }
+}
+
+class two {
+    File <| content == "one" |>
+}
+
+class main {
+include one
+include two
+
+}

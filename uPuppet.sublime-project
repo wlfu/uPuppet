@@ -1,0 +1,135 @@
+{
+    "folders":
+    [
+        {
+            "follow_symlinks": true,
+            "path": "."
+        }
+    ],
+	"build_systems":
+	[
+		{
+			"name": "uPuppet",
+			"variants":
+			[
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path build"
+					],
+					"name": "Compile uPuppet"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path \"ARGS=-v -S $file\" test-ubuntu"
+					],
+					"name": "Run One Test"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path test-ubuntu"
+					],
+					"name": "Run All Tests"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path \"ARGS=-rlv -S $file\" test-ubuntu"
+					],
+					"name": "Make One Latex File"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path \"ARGS=-rl\" test-ubuntu"
+					],
+					"name": "Make All Latex Files"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path \"ARGS=-F\" test-ubuntu"
+					],
+					"name": "Summarize Test Coverage"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path \"ARGS=-u $project_path/../ecoop2017/fig/results-summary.tex\" test-ubuntu"
+					],
+					"name": "Update Latex Test Summary"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"echo clearing cache: $project_path/Cache/*; rm -rf $project_path/Cache/Puppet/*"
+					],
+					"name": "Clear Test Cache"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path start-ubuntu"
+					],
+					"name": "Start Ubuntu VM"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path stop-ubuntu"
+					],
+					"name": "Stop Ubuntu VM"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path create-ubuntu"
+					],
+					"name": "Create New Ubuntu VM"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path provision-ubuntu"
+					],
+					"name": "Provision Ubuntu VM"
+				},
+				{
+					"cmd":
+					[
+						"/bin/bash",
+						"-lc",
+						"make -C $project_path clean"
+					],
+					"name": "Clean Temporary Files"
+				}
+			]
+		}
+	]
+}
