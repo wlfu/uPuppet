@@ -23,6 +23,9 @@ The source is in Src. To compile this, you probably need:
 - ghc 7.10.*
 - `cabal install MissingH`
 - `cabal install Aeson`
+- `cabal install process`
+- `cabal install filepath`
+- `cabal install directory`
 
 Then:
 - Type `make`
@@ -52,6 +55,8 @@ The Vagrant directory contains subdirectories for various OS targets
 - `make create-ubuntu` to create an Ubuntu Vagrant machine with Puppet/uPuppet installed
 - `make provision-ubuntu` to re-provision with latest version of uPuppet etc.
 
+This can be exported as a virtual appliance by using `File -> Export Appliance` from the VirtualBox menu. To log directly into the virtual machine (not using `vagrant ssh`) the user/password is `ubuntu`/`upuppet`. 
+
 ## Testing
 
 The script `Tools/run-tests.pl` will compile the test sources using both uPuppet and
@@ -66,7 +71,7 @@ The script `Tools/run-tests.pl` will compile the test sources using both uPuppet
 By default, the results of the (real) Puppet compilations are cached in the Cache directory. uPuppet results are not cached, because compilations are fast, and the compiler is probably changing as well. Use the -r option to force a recompile of cached files.
 
 The -n option can be used to compile with uPuppet only and not attempt a comparison.
-This allows the compilations to be checked without a running VM, even if the cache is out of date.
+This allows the compilations to be checked without a running VM, even if the cache is out of date. If you want to run the tests from the VM itself, use the `-L` option to execute Puppet, as well as uPuppet, locally.
 
 The following annotations can appear in any comment line (starting with #) in the Puppet source:
 
@@ -74,7 +79,7 @@ The following annotations can appear in any comment line (starting with #) in th
 | ---------- | - |
 | `@EXPECT_FAIL` | Expect both uPuppet & Puppet to fail |
 | `@UNSUPPORTED` | Expect uPuppet to fail & Puppet to compile |
-| `@UNORDERED` | Igonore order differences when comparing (top-level) catalog entries |
+| `@UNORDERED` | Ignore order differences when comparing (top-level) catalog entries |
 | `@OPTIONS <OPTIONS>` | Pass the specified `<OPTIONS>` to the (real) Puppet compiler |
 | `@FEATURES <KEYWORD1>, <KEYWORD2>, ...` | Features tested by this test (see below) |
 

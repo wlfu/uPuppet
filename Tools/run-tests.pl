@@ -36,6 +36,7 @@ my $summaryFile = undef;			# file containing latex for test summary (to be updat
 my $inFile = undef;					# single file to compile
 my $latexOpts = "2fme";				# default options to remote puppet_compile for creating latex
 my $latexOutput = 0;				# create latex output
+my $local = 0;						# run puppet on local machine
 
 my $baseDir = undef;				# base directory for uPuppet
 my $testDir = undef;				# Test directory
@@ -58,6 +59,7 @@ usage: $prog [opts] file ...
  -f               - summarize coverage by feature (short)
  -F               - summarize coverage by feature (long)
  -l               - create latex output
+ -L               - run Puppet locally (instead of via vagrant)
  -m <vm>          - the vm to use for native compilations (default "Ubuntu")
  -n               - compile with uPuppet only (no comparison)
  -r               - recompile cached Puppet output
@@ -74,7 +76,7 @@ sub GetArguments() {
 ##########################################################################################
 
 	my $opts = {};
-	my $opt_string = 'fFlm:nrS:t:u:v';
+	my $opt_string = 'fFLlm:nrS:t:u:v';
 
 	# options
 	if (getopts( $opt_string, $opts )) {
@@ -82,6 +84,7 @@ sub GetArguments() {
 		$verbose=2 if ($opts->{'v'});
 		$recompile=1 if ($opts->{'r'});
 		$latexOutput=1 if ($opts->{'l'});
+		$local=1 if ($opts->{'L'});
 		$testSummary = ($opts->{'F'} ? 3 : 1) if ($opts->{'f'});
 		$testSummary = ($opts->{'f'} ? 3 : 2) if ($opts->{'F'});
 		$inFile=$opts->{'S'} if (defined($opts->{'S'}));
@@ -202,8 +205,12 @@ sub RunTest($) {
 			print stderr "$prog: $result\n";
 			exit(1);
 		}
-		my $cmd2 = "cd $vmDir; vagrant ssh -- \". /etc/profile; puppet-compile";
-		$cmd2 .= " -o '$pc_opts' -- -\" <$testDir/$srcFile";
+		my $cmd2; if ($local) {
+			$cmd2 = "puppet-compile -o '$pc_opts' -- - <$testDir/$srcFile";
+		} else {
+			$cmd2 = "cd $vmDir; vagrant ssh -- \". /etc/profile; puppet-compile";
+			$cmd2 .= " -o '$pc_opts' -- -\" <$testDir/$srcFile";
+		}
 		my $nothing2 =`$cmd2 >$outFile.out 2>$outFile.err`;
 		$status2 = $?;
 
@@ -351,8 +358,12 @@ sub MakeLatex($$) {
 		print stderr "$prog: $result\n";
 		exit(1);
 	}
-	my $cmd = "cd $vmDir; vagrant ssh -- \". /etc/profile; puppet-compile";
-	$cmd .= " -t $latexOpts -N \"$srcFile\" -o '$pc_opts' -- -\" <$testDir/$srcFile";
+	my $cmd; if ($local) {
+		$cmd = "puppet-compile -t $latexOpts -N \"$srcFile\" -o '$pc_opts' -- - <$testDir/$srcFile";
+	} else {
+		$cmd = "cd $vmDir; vagrant ssh -- \". /etc/profile; puppet-compile";
+		$cmd .= " -t $latexOpts -N \"$srcFile\" -o '$pc_opts' -- -\" <$testDir/$srcFile";
+	}
 	my $nothing =`$cmd >$outFile.tex 2>$outFile.tex.err`;
 	my $status = $?;
 

@@ -7,6 +7,7 @@ OPTS = -fno-warn-tabs
 
 SOURCES = $(shell find Src -name *.hs)
 TOOLS = $(shell test -d Tools && find Tools -type f)
+TESTS = $(shell test -d Tests && find Tests -type f)
 UNAME = $(shell uname)
 ARCH = $(shell arch)
 PLATFORM = $(UNAME)-$(ARCH)
@@ -66,6 +67,7 @@ install-tools:
 	@sudo mkdir -p /usr/share/puppet-tools/environments || exit 1
 	@sudo cp -R Tools/Environments/* /usr/share/puppet-tools/environments || exit 1
 	@sudo cp Tools/puppet-compile.pl /usr/local/bin/puppet-compile || exit 1
+	@sudo cp Tools/run-tests.pl /usr/local/bin/run-tests || exit 1
 	@sudo chmod oug+x /usr/local/bin/puppet-compile || exit 1
 
 ##########################################
@@ -93,20 +95,26 @@ provision-ubuntu:
 	@$(MAKE) Tmp/Version.hs
 	@$(MAKE) Vagrant/Ubuntu/$(PROG).tgz
 	@$(MAKE) Vagrant/Ubuntu/$(PROG)-tools.tgz
+	@$(MAKE) Vagrant/Ubuntu/$(PROG)-tests.tgz
 	@echo Provisioning Vagrant image ...
 	@cd Vagrant/Ubuntu; vagrant provision
 
 Vagrant/Ubuntu/$(PROG).tgz: $(SOURCES) Tmp/Version.hs Makefile
 	@echo Packaging Source Distribution: $@ ...
-	@cd ..; tar czf uPuppet/Vagrant/Ubuntu/$(PROG).tgz \
+	@tar czf Vagrant/Ubuntu/$(PROG).tgz \
 		--exclude .DS_Store --exclude ._.DS_Store \
-		uPuppet/Src uPuppet/Tmp/Version.hs uPuppet/Makefile 
+		Src Tmp/Version.hs Makefile 
 
 Vagrant/Ubuntu/$(PROG)-tools.tgz: $(TOOLS) Makefile
 	@echo Packaging Tools: $@ ...
-	@cd ..; tar czf uPuppet/Vagrant/Ubuntu/$(PROG)-tools.tgz \
+	@tar czf Vagrant/Ubuntu/$(PROG)-tools.tgz \
 		--exclude .DS_Store --exclude ._.DS_Store \
-		uPuppet/Tools/Environments uPuppet/Tools/puppet-compile.pl
+		Tools/Environments Tools/puppet-compile.pl Tools/run-tests.pl
+
+Vagrant/Ubuntu/$(PROG)-tests.tgz: $(TESTS) Makefile
+	@echo Packaging Tests: $@ ...
+	@tar czf Vagrant/Ubuntu/$(PROG)-tests.tgz \
+		--exclude .DS_Store --exclude ._.DS_Store Test
 
 ##########################################
 # Testing

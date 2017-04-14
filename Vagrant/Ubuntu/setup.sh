@@ -46,16 +46,23 @@ sudo apt install -y jq || exit 1
 
 echo '****** Building uPuppet ...'
 rm -rf uPuppet || exit 1
-tar zxf /vagrant/uPuppet.tgz || exit 1
+mkdir uPuppet || exit 1
 cd uPuppet || exit 1
+tar zxf /vagrant/uPuppet.tgz || exit 1
 # we don't want to rebuild Version.hs, so make sure it looks uptodate
 test -f Tmp/Version.hs && touch Tmp/Version.hs
 make install || exit 1
 cd ..
 
-echo '****** Installing Puppet Test Tools ...'
-tar zxf /vagrant/uPuppet-tools.tgz || exit 1
+echo '****** Installing uPuppet Test Tools ...'
 cd uPuppet || exit 1
+tar zxf /vagrant/uPuppet-tools.tgz || exit 1
+tar zxf /vagrant/uPuppet-tests.tgz || exit 1
 make install-tools || exit 1
 cd ..
 puppet-compile -i || exit 1
+
+echo '****** Setting Password ...'
+( echo upuppet ; echo upuppet; ) | sudo passwd ubuntu
+exit 0
+
