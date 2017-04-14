@@ -584,15 +584,8 @@ sub DoSummary() {
 
 my $sources = GetArguments();
 
-# make sure we are in a sensible place ...
+# find directories
 my $baseDir = `pwd`; chomp $baseDir;
-unless ($baseDir =~ /\/uPuppet$/) {
-	print stderr "$prog: must be run from uPuppet directory\n";
-	print stderr "$prog: current directory is: $baseDir\n";
-	exit(1);
-}
-
-# find the test & bin directory
 $testDir = "$baseDir/Test";
 $binDir = "$baseDir/Bin";
 $tmpDir = "$baseDir/Tmp";
