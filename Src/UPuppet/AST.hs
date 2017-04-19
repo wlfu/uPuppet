@@ -15,6 +15,7 @@ import Data.List(lookup)
 
 type AST = Program
 
+-- define the data type for values in muPuppet
 data Value =   ValueInt    Integer
              | ValueBool   Bool
              | ValueString String
@@ -23,13 +24,17 @@ data Value =   ValueInt    Integer
              | ValueHash   HashValue
              | ValueRef    String String
              deriving (Show,Eq)
-
+	     
+-- define the type for array values
 type ArrayValue = [Value]
+-- define the type for hash values
 type HashValue  = [(Value, Value)]
 
+-- dereference an array value 
 deRefArray :: ArrayValue -> Integer -> DeRefExp 
 deRefArray xs d = Values (xs!! (fromInteger d))
 
+-- dereference a hash value
 deRefHash :: HashValue -> Value -> DeRefExp
 deRefHash ((x,v):vs) d | ((x,v):vs) == [] = error "deRefHash"
                        | x == d           = Values v 
@@ -62,7 +67,7 @@ data DeRefExp = Var Variable
               | DeRefItem DeRefExp ValueExp
               deriving (Show,Eq)
 
--- check whether a value is an integer nubmer
+-- check whether a value is an integer number
 valueInt :: ValueExp -> Maybe Integer
 valueInt (DeRef (Values (ValueInt x))) = (Just x) 
 valueInt _ = Nothing
@@ -125,7 +130,7 @@ data IfCont = Elseif                 ValueExp Statements (Maybe IfCont)
             | Else                   Statements
                    deriving (Show, Eq)
 
--- define the data type of elements in a program of mPuppet
+-- define the data type of elements in a program of muPuppet
 data ProgramEle = ProSkip 
              |ProStatement          Statements
              |Node                  String Statements
