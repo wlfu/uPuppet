@@ -15,10 +15,10 @@ import UPuppet.Options
 {------------------------------------------------------------------------------
     Types private to the evaluation
 ------------------------------------------------------------------------------}
--- define the type of the environment
+-- define the type of the variable environment
 type Env = [(Scope, Name, Value)]
 
--- look up a variable under some scope in the environment
+-- look up a variable under some scope in the variable environment
 lookupEnv :: Env -> Scope -> Name -> Maybe Value
 lookupEnv [] _ _                                      = Nothing
 lookupEnv ((s, n, v):es) sco x | (x == n && sco == s) = (Just v)
@@ -54,7 +54,7 @@ baseof defEnv SNode       = SNode
 baseof defEnv (SDef sco)  = baseof defEnv sco
 baseof defEnv (SClass a)  = baseof defEnv (lookupDefEnv defEnv a)
 
--- look up the variables in the environment with respect to the parent scope relation
+-- look up the variables in the variable environment with respect to the parent scope relation
 lookforVar :: Env -> DefEnv -> Scope -> Variable -> Value
 -- when the variable is a local variable
 lookforVar es defEnv sco (LocalVar x) = case (lookupEnv es sco x) of 
