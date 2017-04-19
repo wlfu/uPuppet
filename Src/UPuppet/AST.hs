@@ -43,16 +43,18 @@ deRefHash ((x,v):vs) d | ((x,v):vs) == [] = error "deRefHash"
 -- define the date type for scope
 data Scope = STop | SNode | SClass String | SDef Scope  
              deriving (Show, Eq)
+	     
 -- define variables with or without scope
 data Variable = LocalVar String | ScopeVar Scope String 
                 deriving (Show,Eq)
+		
 -- define all binary operators
 data BinOp = AddOp | DivOp | MinOp | TimOp
            | AndOp | OrOp  
            | EqOp  | UneqOp | GrtOp  | LessOp | GeqOp |LeqOp 
              deriving (Show,Eq)
 
--- define expressions in muPuppet
+-- define the expressions in muPuppet
 data ValueExp =   BinOps      BinOp ValueExp ValueExp
                 | Not         ValueExp
                 | Selector    ValueExp [(ValueExp, ValueExp)]
@@ -60,7 +62,8 @@ data ValueExp =   BinOps      BinOp ValueExp ValueExp
                 | Hash        [(Value, ValueExp)]
                 | DeRef       DeRefExp
                 deriving (Show,Eq)
--- define the dereference expression component "DeRefExp"
+		
+-- define the dereference expressions
 data DeRefExp = Var Variable
               | Values Value
               | ResRef String ValueExp
