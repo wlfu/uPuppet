@@ -110,7 +110,7 @@ mergeParams args ((x,dflt):params) = (x, arg):mergeParams args params
                 (Nothing, Just e) -> e
                 (Nothing, Nothing) -> error ("missing value for parameter " ++ x)
 
--- define the data type of statements of muPuppet
+-- define the data type for the statements of muPuppet
 data Statements = Skip
                 |If                     ValueExp Statements (Maybe IfCont)
                 |Unless                 ValueExp Statements (Maybe IfCont)
@@ -125,12 +125,13 @@ data Statements = Skip
                 |ResTypeCont            String ParameterList Statements
                 |ScopeStat              Scope Statements
                 deriving (Show, Eq)
--- define the component "IfCont"
+		
+-- define the data type "IfCont" for else and elseif statements
 data IfCont = Elseif                 ValueExp Statements (Maybe IfCont)
             | Else                   Statements
                    deriving (Show, Eq)
 
--- define the data type of elements in a program of muPuppet
+-- define the data type for elements in a program of muPuppet
 data ProgramEle = ProSkip 
              |ProStatement          Statements
              |Node                  String Statements
@@ -138,5 +139,5 @@ data ProgramEle = ProSkip
              |Class                 String OptParameterList (Maybe String) Statements
              deriving (Show)
 
--- define the type of a program of muPuppet
+-- define the type for a program of muPuppet
 type Program = [ProgramEle] 
